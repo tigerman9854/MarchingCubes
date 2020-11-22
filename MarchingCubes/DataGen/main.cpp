@@ -15,7 +15,7 @@ void ExportScalarFieldCSV(const glm::vec3& minPosition, const glm::vec3& maxPosi
 	//     ...
 	// xn, yn, zn, scalarn
 
-	// Open a csv file to print the results
+	// Open a txt file to print the results
 	std::ofstream file;
 	file.open(filename);
 
@@ -24,9 +24,14 @@ void ExportScalarFieldCSV(const glm::vec3& minPosition, const glm::vec3& maxPosi
 	}
 
 	// Print the parameters
-	file << minPosition.x << "," << minPosition.y << "," << minPosition.z << "\n";
-	file << maxPosition.x << "," << maxPosition.y << "," << maxPosition.z << "\n";
-	file << step.x << "," << step.y << "," << step.z << "\n";
+	file << minPosition.x << " " << minPosition.y << " " << minPosition.z << "\n";
+	file << maxPosition.x << " " << maxPosition.y << " " << maxPosition.z << "\n";
+	file << step.x << " " << step.y << " " << step.z << "\n";
+
+	// Count the number of points we will be generating
+	const glm::vec3 counts = (maxPosition - minPosition) / step + glm::vec3(1, 1, 1);
+	const int count = counts.x * counts.y * counts.z;
+	file << count << "\n";
 
 	// Loop through all 3 dimensions with <step> distance between each point
 	for (float x = minPosition.x; x <= maxPosition.x; x += step.x) {
@@ -37,7 +42,7 @@ void ExportScalarFieldCSV(const glm::vec3& minPosition, const glm::vec3& maxPosi
 				const float value = function({ x, y, z });
 
 				// Add the evaulated point as a new line in the output file
-				file << x << "," << y << "," << z << "," << value << "\n";
+				file << x << " " << y << " " << z << " " << value << "\n";
 			}
 		}
 	}
@@ -54,7 +59,7 @@ int main() {
 	const glm::vec3 max = { 10, 10, 10 };
 	const glm::vec3 step = { 1, 1, 1 };
 
-	ExportScalarFieldCSV(min, max, step, "../Output/sphere.csv", [](const glm::vec3& pos) {
+	ExportScalarFieldCSV(min, max, step, "../Output/sphere.txt", [](const glm::vec3& pos) {
 		// x^2 + y^2 + z^2 = r^2
 		const float radius = 5.f;
 		if (glm::dot(pos, pos) <= radius * radius) {
@@ -67,7 +72,7 @@ int main() {
 		}
 	});
 
-	ExportScalarFieldCSV(min, max, step, "../Output/saddle.csv", [](const glm::vec3& pos) {
+	ExportScalarFieldCSV(min, max, step, "../Output/saddle.txt", [](const glm::vec3& pos) {
 		// z = 1/5(x^2 - y^2)
 		if (pos.x * pos.x - pos.y * pos.y - pos.z * 5.f <= 0) {
 			// Below the saddle

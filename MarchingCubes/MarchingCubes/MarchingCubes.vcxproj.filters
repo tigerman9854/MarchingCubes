@@ -20,10 +20,10 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CSVReader.h">
+    <ClInclude Include="DataStructures.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="DataStructures.h">
+    <ClInclude Include="FileReader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

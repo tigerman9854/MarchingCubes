@@ -1,7 +1,10 @@
 #include "GL/glew.h"
 #include "GL/freeglut.h"
 
+#include "DataStructures.h"
+#include "FileReader.h"
 
+ScalarField* scalarField;
 
 // Forward declare functions
 void init();
@@ -40,6 +43,9 @@ void init()
 
 	// Enable depth
 	glEnable(GL_DEPTH_TEST);
+
+	// Load a dataset
+	scalarField = ReadFile("../Output/sphere.txt");
 }
 
 void keyboard(unsigned char key, int x, int y)
@@ -68,10 +74,21 @@ void display()
 	glLoadIdentity();
 	gluLookAt(0, 0, 15., 0, 0, 0, 0, 1.0, 0);
 
-	// Draw a single point
+	// Draw a point cloud
 	glBegin(GL_POINTS);
-	glColor3f(1, 0, 0);
-	glVertex3f(0, 0, 0);
+
+	if (scalarField) {
+		for (auto it : scalarField->vertices) {
+			if (it->val > 0) {
+				glColor3f(1, 0, 0);
+			}
+			else {
+				glColor3f(0, 1, 0);
+			}
+			glVertex3f(it->pos.x, it->pos.y, it->pos.z);
+		}
+	}
+
 	glEnd();
 
 	// Swap buffers to show the newly rendered image
