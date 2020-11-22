@@ -61,7 +61,7 @@ int main() {
 
 	ExportScalarFieldCSV(min, max, step, "../Output/sphere.txt", [](const glm::vec3& pos) {
 		// x^2 + y^2 + z^2 = r^2
-		const float radius = 5.f;
+		const float radius = 8.f;
 		if (glm::dot(pos, pos) <= radius * radius) {
 			// Inside the sphere
 			return 1.f;
@@ -73,8 +73,8 @@ int main() {
 	});
 
 	ExportScalarFieldCSV(min, max, step, "../Output/saddle.txt", [](const glm::vec3& pos) {
-		// z = 1/5(x^2 - y^2)
-		if (pos.x * pos.x - pos.y * pos.y - pos.z * 5.f <= 0) {
+		// y = 1/5(x^2 - z^2)
+		if (pos.x * pos.x - pos.z * pos.z - pos.y * 5.f <= 0) {
 			// Below the saddle
 			return 1.f;
 		}

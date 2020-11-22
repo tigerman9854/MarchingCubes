@@ -4,7 +4,25 @@
 #include "DataStructures.h"
 #include "FileReader.h"
 
+// Global dataset
 ScalarField* scalarField;
+
+enum MouseMode {
+	none,
+	translate,
+	rotate,
+};
+
+// Variables for transformations
+float rotX = 0;
+float rotY = 0;
+float scale = 0.5f;
+MouseMode mouseMode = none;
+
+const float scaleSens = 1.1f;
+const float rotSens = 1.f;
+int mouseLastX = 0;
+int mouseLastY = 0;
 
 // Forward declare functions
 void init();
@@ -46,6 +64,7 @@ void init()
 
 	// Load a dataset
 	scalarField = ReadFile("../Output/sphere.txt");
+	//scalarField = ReadFile("../Output/saddle.txt");
 }
 
 void keyboard(unsigned char key, int x, int y)
@@ -55,7 +74,15 @@ void keyboard(unsigned char key, int x, int y)
 
 void motion(int x, int y)
 {
+	rotX += (y - mouseLastY) * rotSens;
+	rotY += (x - mouseLastX) * rotSens;
 
+	rotX = std::max(std::min(90.f, rotX), -90.f);
+
+	mouseLastX = x;
+	mouseLastY = y;
+
+	glutPostRedisplay();
 }
 
 void display()
@@ -73,6 +100,10 @@ void display()
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	gluLookAt(0, 0, 15., 0, 0, 0, 0, 1.0, 0);
+
+	glScalef(scale, scale, scale);
+	glRotatef(rotX, 1, 0, 0);
+	glRotatef(rotY, 0, 1, 0);
 
 	// Draw a point cloud
 	glBegin(GL_POINTS);
@@ -97,10 +128,33 @@ void display()
 
 void mouse(int button, int state, int x, int y)
 {
+	if (state == GLUT_DOWN) {
+		if (button == GLUT_LEFT_BUTTON)
+		{
+			mouseMode = rotate;
+		}
+		else if (button == GLUT_RIGHT_BUTTON)
+		{
+			mouseMode = translate;
+		}
+		mouseLastX = x;
+		mouseLastY = y;
+	}
+	else if (state == GLUT_UP) {
+		mouseMode = none;
+	}
 
+	glutPostRedisplay();
 }
 
 void mousewheel(int wheel, int direction, int x, int y)
 {
-
+	if (direction == 1) {
+		scale *= scaleSens;
+		glutPostRedisplay();
+	}
+	else if (direction == -1) {
+		scale /= scaleSens;
+		glutPostRedisplay();
+	}
 }
