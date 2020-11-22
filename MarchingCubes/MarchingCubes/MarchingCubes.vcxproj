@@ -161,6 +161,10 @@ xcopy /s /y "$(SOLUTIONDIR)ThirdParty\freeglut-3.0.0\bin\*.dll" "$(OUTPUTPATH)"<
   <ItemGroup>
     <ClCompile Include="main.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="CSVReader.h" />
+    <ClInclude Include="DataStructures.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
