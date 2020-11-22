@@ -45,7 +45,7 @@ int main() {
 	const glm::vec3 max = { 10.1f, 10.1f, 10.1f };
 	const glm::vec3 step = { 1, 1, 1 };
 
-	ExportScalarFieldCSV(min, max, step, "sphere.csv", [](const glm::vec3& pos) {
+	ExportScalarFieldCSV(min, max, step, "../Output/sphere.csv", [](const glm::vec3& pos) {
 		const float radius = 5.f;
 		if (glm::dot(pos, pos) <= radius * radius) {
 			// Inside the sphere
