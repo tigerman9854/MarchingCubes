@@ -121,7 +121,7 @@ void display()
 	glRotatef(rotY, 0, 1, 0);
 
 	// Draw a point cloud
-	glPointSize(1);
+	glPointSize(5);
 	glBegin(GL_POINTS);
 
 	if (scalarField) {
@@ -138,8 +138,39 @@ void display()
 
 	glEnd();
 
-	glPointSize(10);
-	glBegin(GL_POINTS);
+	// Draw all the cubes we've computed
+	glLineWidth(1);
+	glBegin(GL_LINES);
+	if (scalarField) {
+		for (auto it : scalarField->cubes) {
+			auto drawVertex = [](Vertex* v) {
+				if (v->val > 0) {
+					glColor3f(1, 0, 0);
+				}
+				else {
+					glColor3f(0, 1, 0);
+				}
+				glVertex3f(v->pos.x, v->pos.y, v->pos.z);
+			};
+			auto drawLine = [&](int a, int b) {
+				drawVertex(it->vertices[a]);
+				drawVertex(it->vertices[b]);
+			};
+				
+			drawLine(0, 1);
+			drawLine(1, 2);
+			drawLine(2, 3);
+			drawLine(3, 0);
+			drawLine(0, 4);
+			drawLine(4, 5);
+			drawLine(5, 6);
+			drawLine(6, 7);
+			drawLine(7, 3);
+			drawLine(6, 2);
+			drawLine(5, 1);
+		}
+	}
+
 	glVertex3f(-10.f, -10.f, -10.f);
 	glEnd();
 

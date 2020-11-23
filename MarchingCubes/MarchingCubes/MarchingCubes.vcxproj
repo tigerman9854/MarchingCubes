@@ -89,6 +89,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SOLUTIONDIR)ThirdParty;$(SOLUTIONDIR)ThirdParty\freeglut-3.0.0\include;$(SOLUTIONDIR)ThirdParty\glew-2.1.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OpenMPSupport>true</OpenMPSupport>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -113,6 +114,7 @@ xcopy /s /y "$(SOLUTIONDIR)ThirdParty\freeglut-3.0.0\bin\*.dll" "$(OUTPUTPATH)"<
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SOLUTIONDIR)ThirdParty;$(SOLUTIONDIR)ThirdParty\freeglut-3.0.0\include;$(SOLUTIONDIR)ThirdParty\glew-2.1.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OpenMPSupport>true</OpenMPSupport>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
