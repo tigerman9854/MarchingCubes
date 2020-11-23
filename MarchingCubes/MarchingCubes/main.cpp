@@ -121,6 +121,7 @@ void display()
 	glRotatef(rotY, 0, 1, 0);
 
 	// Draw a point cloud
+	glPointSize(1);
 	glBegin(GL_POINTS);
 
 	if (scalarField) {
@@ -135,6 +136,11 @@ void display()
 		}
 	}
 
+	glEnd();
+
+	glPointSize(10);
+	glBegin(GL_POINTS);
+	glVertex3f(-10.f, -10.f, -10.f);
 	glEnd();
 
 	// Swap buffers to show the newly rendered image

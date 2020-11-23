@@ -2,16 +2,21 @@
 #include <vector>
 #include <glm/glm.hpp>
 
+bool equal(float a, float b) {
+	static float epsilon = 0.00001f;
+	return abs(a - b) < epsilon;
+}
+
+bool equal(const glm::vec3& a, const glm::vec3& b) {
+	return equal(a.x, b.x) && equal(a.y, b.y) && equal(a.z, b.z);
+}
+
 struct Vertex {
 	glm::vec3 pos;
 	float val;
 
 	Vertex(glm::vec3 p, float v) :
 		pos(p), val(v) { }
-};
-
-struct Edge {
-	std::vector<Vertex*> vertices;
 };
 
 // From http://www.cs.carleton.edu/cs_comps/0405/shape/marching_cubes.html
@@ -33,7 +38,9 @@ struct Edge {
 
 struct Cube {
 	std::vector<Vertex*> vertices;
-	std::vector<Edge*> edges;
+
+	Cube(std::vector<Vertex*> verts)
+		: vertices(verts) {}
 };
 
 struct ScalarField {

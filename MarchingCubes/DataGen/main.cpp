@@ -57,7 +57,7 @@ int main() {
 
 	const glm::vec3 min = { -10, -10, -10 };
 	const glm::vec3 max = { 10, 10, 10 };
-	const glm::vec3 step = { 1, 1, 1 };
+	const glm::vec3 step = { 2, 2, 2 };
 
 	ExportScalarFieldCSV(min, max, step, "../Output/sphere.txt", [](const glm::vec3& pos) {
 		// x^2 + y^2 + z^2 = r^2
