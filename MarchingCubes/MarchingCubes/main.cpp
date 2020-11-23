@@ -16,11 +16,13 @@ enum MouseMode {
 // Variables for transformations
 float rotX = 0;
 float rotY = 0;
+glm::vec3 trans;
 float scale = 0.5f;
 MouseMode mouseMode = none;
 
 const float scaleSens = 1.1f;
 const float rotSens = 1.f;
+const float panSens = 0.2f;
 int mouseLastX = 0;
 int mouseLastY = 0;
 
@@ -74,10 +76,19 @@ void keyboard(unsigned char key, int x, int y)
 
 void motion(int x, int y)
 {
-	rotX += (y - mouseLastY) * rotSens;
-	rotY += (x - mouseLastX) * rotSens;
+	if (mouseMode == rotate) {
+		// Rotate the camera
+		rotX += (y - mouseLastY) * rotSens;
+		rotY += (x - mouseLastX) * rotSens;
 
-	rotX = std::max(std::min(90.f, rotX), -90.f);
+		// Clamp x axis rotation between -90 and 90
+		rotX = std::max(std::min(90.f, rotX), -90.f);
+	} 
+	else if (mouseMode == translate) {
+		// Translate the camera
+		trans.x += (x - mouseLastX) * panSens;
+		trans.y -= (y - mouseLastY) * panSens;
+	}
 
 	mouseLastX = x;
 	mouseLastY = y;
@@ -87,6 +98,7 @@ void motion(int x, int y)
 
 void display()
 {
+	// Get the width and height of the glut window for proper scaling and viewporting
 	const int width = glutGet(GLUT_WINDOW_WIDTH);
 	const int height = glutGet(GLUT_WINDOW_HEIGHT);
 
@@ -101,7 +113,10 @@ void display()
 	glLoadIdentity();
 	gluLookAt(0, 0, 15., 0, 0, 0, 0, 1.0, 0);
 
+
+	// Apply transformations in order 
 	glScalef(scale, scale, scale);
+	glTranslatef(trans.x, trans.y, trans.z);
 	glRotatef(rotX, 1, 0, 0);
 	glRotatef(rotY, 0, 1, 0);
 
