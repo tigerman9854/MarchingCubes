@@ -10,6 +10,7 @@ void ExportScalarFieldCSV(const glm::vec3& minPosition, const glm::vec3& maxPosi
 	// minx, miny, minz
 	// maxx, maxy, maxz
 	// stepx, stepy, stepz
+	// vertexCount
 	// x1, y1, z1, scalar1
 	// x2, y2, z2, scalar2
 	//     ...
@@ -60,7 +61,7 @@ int main() {
 	const glm::vec3 step = { 1, 1, 1 };
 
 	ExportScalarFieldCSV(min, max, step, "../Output/sphere.txt", [](const glm::vec3& pos) {
-		// x^2 + y^2 + z^2 = r^2
+		// x^2 + y^2 + z^2 <= r^2
 		const float radius = 8.f;
 		if (glm::dot(pos, pos) <= radius * radius) {
 			// Inside the sphere
