@@ -13,12 +13,19 @@ enum MouseMode {
 	rotate,
 };
 
+enum DisplayMode {
+	points,
+	edges,
+	cubes,
+};
+
 // Variables for transformations
 float rotX = 0;
 float rotY = 0;
 glm::vec3 trans;
 float scale = 0.5f;
 MouseMode mouseMode = none;
+DisplayMode displayMode = points;
 
 const float scaleSens = 1.1f;
 const float rotSens = 1.f;
@@ -71,7 +78,19 @@ void init()
 
 void keyboard(unsigned char key, int x, int y)
 {
+	switch (key) {
+	case '1':
+		displayMode = points;
+		break;
+	case '2':
+		displayMode = edges;
+		break;
+	case '3':
+		displayMode = cubes;
+		break;
+	}
 
+	glutPostRedisplay();
 }
 
 void motion(int x, int y)
@@ -120,29 +139,30 @@ void display()
 	glRotatef(rotX, 1, 0, 0);
 	glRotatef(rotY, 0, 1, 0);
 
-	// Draw a point cloud
-	glPointSize(5);
-	glBegin(GL_POINTS);
-
 	if (scalarField) {
-		for (auto it : scalarField->vertices) {
-			if (it->val > 0) {
-				glColor3f(1, 0, 0);
+		if (displayMode == points)
+		{
+			// Draw a point cloud
+			glPointSize(2);
+			glBegin(GL_POINTS);
+
+
+			for (auto it : scalarField->vertices) {
+				if (it->val > 0) {
+					glColor3f(1, 0, 0);
+				}
+				else {
+					glColor3f(0, 1, 0);
+				}
+				glVertex3f(it->pos.x, it->pos.y, it->pos.z);
 			}
-			else {
-				glColor3f(0, 1, 0);
-			}
-			glVertex3f(it->pos.x, it->pos.y, it->pos.z);
+			glEnd();
 		}
-	}
+		else if (displayMode == edges) {
+			// Draw the edges of the cubes
+			glLineWidth(1);
+			glBegin(GL_LINES);
 
-	glEnd();
-
-	// Draw all the cubes we've computed
-	glLineWidth(1);
-	glBegin(GL_LINES);
-	if (scalarField) {
-		for (auto it : scalarField->cubes) {
 			auto drawVertex = [](Vertex* v) {
 				if (v->val > 0) {
 					glColor3f(1, 0, 0);
@@ -152,27 +172,87 @@ void display()
 				}
 				glVertex3f(v->pos.x, v->pos.y, v->pos.z);
 			};
-			auto drawLine = [&](int a, int b) {
-				drawVertex(it->vertices[a]);
-				drawVertex(it->vertices[b]);
+
+			for (auto it : scalarField->cubes) {
+
+				auto drawLine = [&](int a, int b) {
+					drawVertex(it->vertices[a]);
+					drawVertex(it->vertices[b]);
+				};
+
+				drawLine(0, 1);
+				drawLine(1, 2);
+				drawLine(2, 3);
+				drawLine(3, 0);
+				drawLine(0, 4);
+				drawLine(4, 5);
+				drawLine(5, 6);
+				drawLine(6, 7);
+				drawLine(7, 3);
+				drawLine(6, 2);
+				drawLine(5, 1);
+			}
+			
+			glEnd();
+		}
+		else if (displayMode == cubes) {
+			// Draw every cube with at least 1 vertex above the threshold
+			glBegin(GL_QUADS);
+			glColor3f(1, 0, 0);
+
+			auto drawVertex = [](Vertex* v) {
+				glVertex3f(v->pos.x, v->pos.y, v->pos.z);
 			};
-				
-			drawLine(0, 1);
-			drawLine(1, 2);
-			drawLine(2, 3);
-			drawLine(3, 0);
-			drawLine(0, 4);
-			drawLine(4, 5);
-			drawLine(5, 6);
-			drawLine(6, 7);
-			drawLine(7, 3);
-			drawLine(6, 2);
-			drawLine(5, 1);
+
+			auto shouldDraw = [](Cube* c) {
+				for (Vertex* v : c->vertices) {
+					if (v->val > 0) {
+						return true;
+					}
+				}
+				return false;
+			};
+
+
+			for (auto it : scalarField->cubes) {
+				if (!shouldDraw(it)) {
+					continue;
+				}
+
+				drawVertex(it->vertices[0]);
+				drawVertex(it->vertices[1]);
+				drawVertex(it->vertices[2]);
+				drawVertex(it->vertices[3]);
+
+				drawVertex(it->vertices[0]);
+				drawVertex(it->vertices[1]);
+				drawVertex(it->vertices[5]);
+				drawVertex(it->vertices[4]);
+
+				drawVertex(it->vertices[0]);
+				drawVertex(it->vertices[4]);
+				drawVertex(it->vertices[7]);
+				drawVertex(it->vertices[3]);
+
+				drawVertex(it->vertices[1]);
+				drawVertex(it->vertices[2]);
+				drawVertex(it->vertices[6]);
+				drawVertex(it->vertices[5]);
+
+				drawVertex(it->vertices[2]);
+				drawVertex(it->vertices[3]);
+				drawVertex(it->vertices[7]);
+				drawVertex(it->vertices[6]);
+
+				drawVertex(it->vertices[4]);
+				drawVertex(it->vertices[5]);
+				drawVertex(it->vertices[6]);
+				drawVertex(it->vertices[7]);
+			}
+
+			glEnd();
 		}
 	}
-
-	glVertex3f(-10.f, -10.f, -10.f);
-	glEnd();
 
 	// Swap buffers to show the newly rendered image
 	glutSwapBuffers();
