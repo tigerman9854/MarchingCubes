@@ -196,39 +196,60 @@ void display()
 			glEnd();
 		}
 		else if (displayMode == cubes) {
-			// Draw every cube with at least 1 vertex above the threshold
 			glBegin(GL_QUADS);
-			glColor3f(1, 0, 0);
 
 			auto drawVertex = [](Vertex* v) {
 				glVertex3f(v->pos.x, v->pos.y, v->pos.z);
 			};
 
+			// Helper which determines if a vertex exists on either side of the threshold
 			auto shouldDraw = [](Cube* c) {
+				bool above = false;
+				bool below = false;
 				for (Vertex* v : c->vertices) {
 					if (v->val > 0) {
-						return true;
+						above = true;
+					}
+					else {
+						below = true;
 					}
 				}
-				return false;
+				return above && below;
 			};
 
 
 			for (auto it : scalarField->cubes) {
+				// Only draw this cube if it contains at least 1 vertex on either side of the threshold
 				if (!shouldDraw(it)) {
 					continue;
 				}
 
+				// Bottom and top
+				glColor3f(0.6f, 0, 0);
 				drawVertex(it->vertices[0]);
 				drawVertex(it->vertices[1]);
 				drawVertex(it->vertices[2]);
 				drawVertex(it->vertices[3]);
 
+				drawVertex(it->vertices[4]);
+				drawVertex(it->vertices[5]);
+				drawVertex(it->vertices[6]);
+				drawVertex(it->vertices[7]);
+
+				// Front and back
+				glColor3f(0.8f, 0, 0);
 				drawVertex(it->vertices[0]);
 				drawVertex(it->vertices[1]);
 				drawVertex(it->vertices[5]);
 				drawVertex(it->vertices[4]);
 
+				drawVertex(it->vertices[2]);
+				drawVertex(it->vertices[3]);
+				drawVertex(it->vertices[7]);
+				drawVertex(it->vertices[6]);
+
+				// Right and left
+				glColor3f(1.f, 0, 0);
 				drawVertex(it->vertices[0]);
 				drawVertex(it->vertices[4]);
 				drawVertex(it->vertices[7]);
@@ -238,16 +259,6 @@ void display()
 				drawVertex(it->vertices[2]);
 				drawVertex(it->vertices[6]);
 				drawVertex(it->vertices[5]);
-
-				drawVertex(it->vertices[2]);
-				drawVertex(it->vertices[3]);
-				drawVertex(it->vertices[7]);
-				drawVertex(it->vertices[6]);
-
-				drawVertex(it->vertices[4]);
-				drawVertex(it->vertices[5]);
-				drawVertex(it->vertices[6]);
-				drawVertex(it->vertices[7]);
 			}
 
 			glEnd();
