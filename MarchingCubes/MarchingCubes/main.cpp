@@ -30,7 +30,7 @@ DisplayMode displayMode = points;
 
 const float scaleSens = 1.1f;
 const float rotSens = 1.f;
-const float panSens = 0.2f;
+const float panSens = 0.15f;
 int mouseLastX = 0;
 int mouseLastY = 0;
 
@@ -268,7 +268,6 @@ void display()
 			glEnd();
 		}
 		else if (displayMode == marching) {
-
 			// Set up 2 lights directly opposite eachother
 			glEnable(GL_LIGHTING);
 			glEnable(GL_NORMALIZE);
@@ -320,6 +319,7 @@ void display()
 
 void mouse(int button, int state, int x, int y)
 {
+	// Left button to rotate, right button to pan
 	if (state == GLUT_DOWN) {
 		if (button == GLUT_LEFT_BUTTON)
 		{
@@ -341,6 +341,7 @@ void mouse(int button, int state, int x, int y)
 
 void mousewheel(int wheel, int direction, int x, int y)
 {
+	// Zoom with mouse wheel
 	if (direction == 1) {
 		scale *= scaleSens;
 		glutPostRedisplay();

@@ -79,6 +79,7 @@ ScalarField* ReadFile(const std::string& filepath) {
 		}
 	}
 
+
 	// Use one thread to add all temp vectors to the main vector
 	for (auto it : tempCubeVectors) {
 		ret->cubes.insert(ret->cubes.end(), it.begin(), it.end());
