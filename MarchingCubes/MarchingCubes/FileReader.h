@@ -1,10 +1,13 @@
 #pragma once
 #include <fstream>
 #include <omp.h>
+#include <vector>
 
 #include "DataStructures.h"
 
 const int threadCount = 24;
+
+void MarchingCubes(ScalarField*);
 
 ScalarField* ReadFile(const std::string& filepath) {
 	std::ifstream file(filepath);
@@ -81,5 +84,41 @@ ScalarField* ReadFile(const std::string& filepath) {
 		ret->cubes.insert(ret->cubes.end(), it.begin(), it.end());
 	}
 
+	// Apply the marching cubes algorithm to the scalar field
+	// This is based on the original implementation from the paper
+	MarchingCubes(ret);
+
 	return ret;
+}
+
+void MarchingCubes(ScalarField* scalarField) 
+{
+	for (auto it : scalarField->cubes) {
+		// Determine the index into the edge table which
+		// tells us which vertices are inside of the surface
+		int cubeType = 0;
+		if (it->vertices[0]->val > 0) cubeType |= 1;
+		if (it->vertices[1]->val > 0) cubeType |= 2;
+		if (it->vertices[2]->val > 0) cubeType |= 4;
+		if (it->vertices[3]->val > 0) cubeType |= 8;
+		if (it->vertices[4]->val > 0) cubeType |= 16;
+		if (it->vertices[5]->val > 0) cubeType |= 32;
+		if (it->vertices[6]->val > 0) cubeType |= 64;
+		if (it->vertices[7]->val > 0) cubeType |= 128;
+
+		// Convert the cube types into vertices
+		std::vector<Vertex*> tempVertexStorage;
+		for (int i = 0; triTable[cubeType][i] != -1; ++i) {
+			const int edgeIndex = triTable[cubeType][i];
+			Vertex* edge = it->edges[edgeIndex];
+			tempVertexStorage.push_back(edge);
+
+			// Take the first 3 vertices and generate a triangle
+			if (tempVertexStorage.size() == 3) {
+				Triangle* t = new Triangle(tempVertexStorage);
+				it->marchingCubesResults.push_back(t);
+				tempVertexStorage.clear();
+			}
+		}
+	}
 }

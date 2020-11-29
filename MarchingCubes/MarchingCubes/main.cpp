@@ -17,6 +17,7 @@ enum DisplayMode {
 	points,
 	edges,
 	cubes,
+	marching,
 };
 
 // Variables for transformations
@@ -87,6 +88,9 @@ void keyboard(unsigned char key, int x, int y)
 		break;
 	case '3':
 		displayMode = cubes;
+		break;
+	case '4':
+		displayMode = marching;
 		break;
 	}
 
@@ -262,6 +266,51 @@ void display()
 			}
 
 			glEnd();
+		}
+		else if (displayMode == marching) {
+
+			// Set up 2 lights directly opposite eachother
+			glEnable(GL_LIGHTING);
+			glEnable(GL_NORMALIZE);
+			glEnable(GL_LIGHT0);
+			glEnable(GL_LIGHT1);
+
+			float globalAmbient[4] = { 0.5f, 0.5f, 0.5f, 1.f };
+			float pos[4] = { 50.f, 0.f, 15.f, 1.f };
+			float pos2[4] = { -50.f, 0.f, -15.f, 1.f };
+			float diffuse[4] = { 0.5f, 0.5f, 0.5f, 1.f };
+
+			glLightModelfv(GL_LIGHT_MODEL_AMBIENT, globalAmbient);
+			glLightfv(GL_LIGHT0, GL_POSITION, pos);
+			glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse);
+			glLightfv(GL_LIGHT1, GL_POSITION, pos2);
+			glLightfv(GL_LIGHT1, GL_DIFFUSE, diffuse);
+
+			// Set up red material
+			float ambientColor[4] = { 1.f, 0.f, 0.f, 1.f };
+			float diffuseColor[4] = { 1.f, 0.f, 0.f, 1.f };
+			glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, ambientColor);
+			glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, diffuseColor);
+
+			// Draw the triangles computed by marching squares
+			glBegin(GL_TRIANGLES);
+			for (auto it : scalarField->cubes) {
+				for (auto tri : it->marchingCubesResults) {
+					glNormal3f(tri->normal.x, tri->normal.y, tri->normal.z);
+					glVertex3f(tri->vertices[0]->pos.x, tri->vertices[0]->pos.y, tri->vertices[0]->pos.z);
+					glVertex3f(tri->vertices[1]->pos.x, tri->vertices[1]->pos.y, tri->vertices[1]->pos.z);
+					glVertex3f(tri->vertices[2]->pos.x, tri->vertices[2]->pos.y, tri->vertices[2]->pos.z);
+				}
+			}
+
+			glEnd();
+
+			// Disable all the things we enabled
+			glDisable(GL_LIGHT1);
+			glDisable(GL_LIGHT0);
+			glDisable(GL_NORMALIZE);
+			glDisable(GL_LIGHTING);
+
 		}
 	}
 
