@@ -108,10 +108,9 @@ private:
 			// field changes from positive to negative
 			LerpVertex(first, second);
 		}
-		else {
-			// Return the middle point between the two vertices
-			return AvgVertex(first, second);
-		}
+
+		// Return the middle point between the two vertices
+		return AvgVertex(first, second);
 	}
 };
 

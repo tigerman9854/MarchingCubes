@@ -31,7 +31,7 @@ void ExportScalarFieldCSV(const glm::vec3& minPosition, const glm::vec3& maxPosi
 
 	// Count the number of points we will be generating
 	const glm::vec3 counts = (maxPosition - minPosition) / step + glm::vec3(1, 1, 1);
-	const int count = counts.x * counts.y * counts.z;
+	const int count = (int)counts.x * (int)counts.y * (int)counts.z;
 	file << count << "\n";
 
 	// Loop through all 3 dimensions with <step> distance between each point

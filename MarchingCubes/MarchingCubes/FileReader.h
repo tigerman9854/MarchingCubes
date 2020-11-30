@@ -61,7 +61,7 @@ ScalarField* ReadFile(const std::string& filepath) {
 	std::vector<Cube*> tempCubeVectors[threadCount];
 
 #pragma omp parallel for default(shared), schedule(dynamic, 10)
-	for (int i = 0; i < ret->vertices.size(); ++i) {
+	for (int i = 0; i < (int)ret->vertices.size(); ++i) {
 		const int threadNumber = omp_get_thread_num();
 
 		// Search for the 8 vertices to build this cube
