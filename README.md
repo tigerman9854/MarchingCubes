@@ -2,7 +2,7 @@
 
 CS 553/453 Final Project
 
-Ashley Pettibone, Kyle Hiebel
+Ashley Pettibone, Kyle Hiebel, Braeden Kuether
 
 ### 1. Point Cloud
 ![](Images/points.PNG)
