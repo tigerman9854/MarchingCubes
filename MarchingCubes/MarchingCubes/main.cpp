@@ -79,6 +79,7 @@ void init()
 
 void keyboard(unsigned char key, int x, int y)
 {
+	// Change mode based on keypress
 	switch (key) {
 	case '1':
 		displayMode = points;
@@ -149,8 +150,6 @@ void display()
 			// Draw a point cloud
 			glPointSize(2);
 			glBegin(GL_POINTS);
-
-
 			for (auto it : scalarField->vertices) {
 				if (it->val < 0) {
 					glColor3f(1, 0, 0);

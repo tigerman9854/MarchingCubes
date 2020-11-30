@@ -5,8 +5,10 @@
 
 #include "DataStructures.h"
 
+// Define the number of threads OpenMP will use
 const int threadCount = 24;
 
+// Forward declare the marching cubes function (this is where the main work is done)
 void MarchingCubes(ScalarField*);
 
 ScalarField* ReadFile(const std::string& filepath) {
@@ -15,7 +17,7 @@ ScalarField* ReadFile(const std::string& filepath) {
 		return nullptr;
 	}
 
-	// Read metadata
+	// Read metadata (min, max, step, vertex count)
 	int vertexCount;
 	float x, y, z, scalar;
 	file >> x >> y >> z;
@@ -26,11 +28,11 @@ ScalarField* ReadFile(const std::string& filepath) {
 	glm::vec3 step(x, y, z);
 	file >> vertexCount;
 
-	// Allocate a scalar field
+	// Allocate a new scalar field
 	ScalarField* ret = new ScalarField();
 
 	// Read all vertices
-	for(int i = 0; i < vertexCount; ++i) {
+	for (int i = 0; i < vertexCount; ++i) {
 		file >> x >> y >> z >> scalar;
 		ret->vertices.push_back(new Vertex({ x,y,z }, scalar));
 	}
@@ -54,7 +56,7 @@ ScalarField* ReadFile(const std::string& filepath) {
 	const glm::vec3 offset7 = glm::vec3(0, 1, 1) * step;
 
 	// Generate the cube data-structure
-	// This is a slow n^2 operation so use OpenMP to parallelize
+	// This is a slow n^2 operation so use OpenMP for parallel computing
 	omp_set_num_threads(threadCount);
 	std::vector<Cube*> tempCubeVectors[threadCount];
 
@@ -79,11 +81,12 @@ ScalarField* ReadFile(const std::string& filepath) {
 		}
 	}
 
-
 	// Use one thread to add all temp vectors to the main vector
 	for (auto it : tempCubeVectors) {
 		ret->cubes.insert(ret->cubes.end(), it.begin(), it.end());
 	}
+
+
 
 	// Apply the marching cubes algorithm to the scalar field
 	// This is based on the original implementation from the paper
@@ -107,14 +110,14 @@ void MarchingCubes(ScalarField* scalarField)
 		if (it->vertices[6]->val > 0) cubeType |= 64;
 		if (it->vertices[7]->val > 0) cubeType |= 128;
 
-		// Convert the cube types into vertices
+		// Convert the cube type into a set of vertices
 		std::vector<Vertex*> tempVertexStorage;
 		for (int i = 0; triTable[cubeType][i] != -1; ++i) {
 			const int edgeIndex = triTable[cubeType][i];
 			Vertex* edge = it->edges[edgeIndex];
 			tempVertexStorage.push_back(edge);
 
-			// Take the first 3 vertices and generate a triangle
+			// Generate a triangle if we have three vertices
 			if (tempVertexStorage.size() == 3) {
 				Triangle* t = new Triangle(tempVertexStorage);
 				it->marchingCubesResults.push_back(t);
