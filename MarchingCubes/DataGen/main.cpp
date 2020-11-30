@@ -63,13 +63,13 @@ int main() {
 
 	auto sphereFunc = [](const glm::vec3& pos) {
 		// x^2 + y^2 + z^2 - r^2 = 0
-		const float radius = 8.f;
+		const float radius = 8.1f;
 		return glm::dot(pos, pos) - radius * radius;
 	};
 
 	auto saddleFunc = [](const glm::vec3& pos) {
-		// x^2 - z^2 - 5y = 0
-		return pos.x * pos.x - pos.z * pos.z - pos.y * 5.f;
+		// x^2 - z^2 - 5.1y = 0
+		return pos.x * pos.x - pos.z * pos.z - pos.y * 5.1f;
 	};
 
 	// TODO: Add more functions

@@ -58,20 +58,19 @@ struct Cube {
 	Cube(std::vector<Vertex*> verts)
 		: vertices(verts) 
 	{
-		// Create the 12 edges determined by the average of
-		// their 2 vertices
-		edges.push_back(AvgVertex(vertices[0], vertices[1]));
-		edges.push_back(AvgVertex(vertices[1], vertices[2]));
-		edges.push_back(AvgVertex(vertices[2], vertices[3]));
-		edges.push_back(AvgVertex(vertices[3], vertices[0]));
-		edges.push_back(AvgVertex(vertices[4], vertices[5]));
-		edges.push_back(AvgVertex(vertices[5], vertices[6]));
-		edges.push_back(AvgVertex(vertices[6], vertices[7]));
-		edges.push_back(AvgVertex(vertices[7], vertices[4]));
-		edges.push_back(AvgVertex(vertices[0], vertices[4]));
-		edges.push_back(AvgVertex(vertices[1], vertices[5]));
-		edges.push_back(AvgVertex(vertices[2], vertices[6]));
-		edges.push_back(AvgVertex(vertices[3], vertices[7]));
+		// Build the edges
+		edges.push_back(ComputeEdgePoint(vertices[0], vertices[1]));
+		edges.push_back(ComputeEdgePoint(vertices[1], vertices[2]));
+		edges.push_back(ComputeEdgePoint(vertices[2], vertices[3]));
+		edges.push_back(ComputeEdgePoint(vertices[3], vertices[0]));
+		edges.push_back(ComputeEdgePoint(vertices[4], vertices[5]));
+		edges.push_back(ComputeEdgePoint(vertices[5], vertices[6]));
+		edges.push_back(ComputeEdgePoint(vertices[6], vertices[7]));
+		edges.push_back(ComputeEdgePoint(vertices[7], vertices[4]));
+		edges.push_back(ComputeEdgePoint(vertices[0], vertices[4]));
+		edges.push_back(ComputeEdgePoint(vertices[1], vertices[5]));
+		edges.push_back(ComputeEdgePoint(vertices[2], vertices[6]));
+		edges.push_back(ComputeEdgePoint(vertices[3], vertices[7]));
 	}
 
 	~Cube() {
@@ -91,6 +90,28 @@ private:
 		const glm::vec3 pos = (first->pos + second->pos) / 2.f;
 		const float val = (first->val + second->val) / 2.f;
 		return new Vertex(pos, val);
+	}
+
+	Vertex* LerpVertex(Vertex* first, Vertex* second) {
+		const float abs1 = abs(first->val);
+		const float abs2 = abs(second->val);
+		const float mix1 = abs1 / (abs1 + abs2);
+		const float mix2 = abs2 / (abs1 + abs2);
+		const glm::vec3 pos = mix2 * first->pos + mix1 * second->pos;
+		return new Vertex(pos, 0);
+	}
+
+	Vertex* ComputeEdgePoint(Vertex* first, Vertex* second) {
+		// Determine if there's a sign difference between <first> and <second>
+		if (first->val * second->val < 0) {
+			// Use linear interpolation to determine the exact point where the scalar
+			// field changes from positive to negative
+			LerpVertex(first, second);
+		}
+		else {
+			// Return the middle point between the two vertices
+			return AvgVertex(first, second);
+		}
 	}
 };
 
