@@ -55,35 +55,27 @@ void ExportScalarFieldCSV(const glm::vec3& minPosition, const glm::vec3& maxPosi
 
 
 int main() {
-
+	// Define the boundaries of the scalar field
 	const glm::vec3 min = { -10, -10, -10 };
 	const glm::vec3 max = { 10, 10, 10 };
 	const glm::vec3 step = { 1, 1, 1 };
 
-	ExportScalarFieldCSV(min, max, step, "../Output/sphere.txt", [](const glm::vec3& pos) {
-		// x^2 + y^2 + z^2 <= r^2
-		const float radius = 8.f;
-		if (glm::dot(pos, pos) <= radius * radius) {
-			// Inside the sphere
-			return 1.f;
-		} 
-		else {
-			// Outside the sphere
-			return 0.f;
-		}
-	});
 
-	ExportScalarFieldCSV(min, max, step, "../Output/saddle.txt", [](const glm::vec3& pos) {
-		// y = 1/5(x^2 - z^2)
-		if (pos.x * pos.x - pos.z * pos.z - pos.y * 5.f <= 0) {
-			// Below the saddle
-			return 1.f;
-		}
-		else {
-			// Above the saddle
-			return 0.f;
-		}
-	});
+	auto sphereFunc = [](const glm::vec3& pos) {
+		// x^2 + y^2 + z^2 - r^2 = 0
+		const float radius = 8.f;
+		return glm::dot(pos, pos) - radius * radius;
+	};
+
+	auto saddleFunc = [](const glm::vec3& pos) {
+		// x^2 - z^2 - 5y = 0
+		return pos.x * pos.x - pos.z * pos.z - pos.y * 5.f;
+	};
+
+	// TODO: Add more functions
+
+	ExportScalarFieldCSV(min, max, step, "../Output/sphere.txt", sphereFunc);
+	ExportScalarFieldCSV(min, max, step, "../Output/saddle.txt", saddleFunc);
 
 	return 0;
 }

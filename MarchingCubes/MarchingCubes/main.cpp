@@ -152,7 +152,7 @@ void display()
 
 
 			for (auto it : scalarField->vertices) {
-				if (it->val > 0) {
+				if (it->val < 0) {
 					glColor3f(1, 0, 0);
 				}
 				else {
@@ -168,7 +168,7 @@ void display()
 			glBegin(GL_LINES);
 
 			auto drawVertex = [](Vertex* v) {
-				if (v->val > 0) {
+				if (v->val < 0) {
 					glColor3f(1, 0, 0);
 				}
 				else {
