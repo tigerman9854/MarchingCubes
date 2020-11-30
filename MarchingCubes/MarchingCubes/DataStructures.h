@@ -106,7 +106,7 @@ private:
 		if (first->val * second->val < 0) {
 			// Use linear interpolation to determine the exact point where the scalar
 			// field changes from positive to negative
-			LerpVertex(first, second);
+			return LerpVertex(first, second);
 		}
 
 		// Return the middle point between the two vertices
