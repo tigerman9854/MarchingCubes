@@ -73,8 +73,14 @@ void init()
 	glEnable(GL_DEPTH_TEST);
 
 	// Load a dataset
-	scalarField = ReadFile("../Output/sphere.txt");
-	//scalarField = ReadFile("../Output/saddle.txt");
+	//scalarField = ReadFile("../Output/sphere.txt");
+	scalarField = ReadFile("../Output/saddle.txt");
+	//scalarField = ReadFile("../Output/cone.txt");
+	//scalarField = ReadFile("../Output/parabola.txt");
+	//scalarField = ReadFile("../Output/chair.txt");
+	//scalarField = ReadFile("../Output/conetear.txt");
+	//scalarField = ReadFile("../Output/curve.txt");
+	//scalarField = ReadFile("../Output/curve2.txt");
 }
 
 void keyboard(unsigned char key, int x, int y)

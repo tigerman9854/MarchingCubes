@@ -103,10 +103,14 @@ int main() {
 	};
 
 
-	// TODO: Add more functions
-
 	ExportScalarFieldCSV(min, max, step, "../Output/sphere.txt", sphereFunc);
 	ExportScalarFieldCSV(min, max, step, "../Output/saddle.txt", saddleFunc);
+	ExportScalarFieldCSV(min, max, step, "../Output/cone.txt", coneFunc);
+	ExportScalarFieldCSV(min, max, step, "../Output/parabola.txt", parabolaFunc);
+	ExportScalarFieldCSV(min, max, step, "../Output/chair.txt", chairFunc);
+	ExportScalarFieldCSV(min, max, step, "../Output/conetear.txt", conetearFunc);
+	ExportScalarFieldCSV(min, max, step, "../Output/curve.txt", curveFunc);
+	ExportScalarFieldCSV(min, max, step, "../Output/curve2.txt", curve2Func);
 
 	return 0;
 }
