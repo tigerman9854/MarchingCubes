@@ -71,6 +71,37 @@ int main() {
 		// x^2 - z^2 - 5.1y = 0
 		return pos.x * pos.x - pos.z * pos.z - pos.y * 5.1f;
 	};
+	
+	auto coneFunc = [](const glm::vec3& pos) {
+		// x + y = 0
+		return pos.x + pos.y;
+	};
+
+	auto parabolaFunc = [](const glm::vec3& pos) {
+		// x^2 + y^2 = 0
+		return pos.x * pos.x + pos.y * pos.y;
+	};
+
+	auto chairFunc = [](const glm::vec3& pos) {
+		// x^3 + y^3 = 0
+		return pos.x * pos.x * pos.x + pos.y * pos.y * pos.y;
+	};
+
+	auto conetearFunc = [](const glm::vec3& pos) {
+		// x^2 + y^2 + z^3 - z^2 = 0
+		return pos.x * pos.x + pos.y * pos.y + pos.z * pos.z * pos.z - pos.z * pos.z;
+	};
+
+	auto curveFunc = [](const glm::vec3& pos) {
+		// x^4 - y^2 - x^6 = 0
+		return pos.x * pos.x * pos.x * pos.x - pos.y * pos.y - pos.x * pos.x * pos.x * pos.x * pos.x * pos.x;
+	};
+
+	auto curve2Func = [](const glm::vec3& pos) {
+		// x^3 + y^2z + xz^2 + x^2 = 0
+		return pos.x * pos.x * pos.x + pos.y * pos.y * pos.z + pos.x * pos.z * pos.z + pos.x * pos.x;
+	};
+
 
 	// TODO: Add more functions
 
