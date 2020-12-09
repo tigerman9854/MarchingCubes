@@ -73,28 +73,41 @@ int main() {
 	};
 	
 	auto coneFunc = [](const glm::vec3& pos) {
-		// x + y = 0
-		return pos.x + pos.y;
+		// x^2 + y^2 - z = 0
+		const float offset = 5.0;
+		return (pos.x * pos.x) + (pos.y * pos.y) - pos.z - offset;
 	};
 
 	auto parabolaFunc = [](const glm::vec3& pos) {
-		// x^2 + y^2 = 0
-		return pos.x * pos.x + pos.y * pos.y;
+		// x^2/a^2 + y^2/b^2 - z = 0
+		const float a = 2.0;
+		const float b = 2.0;
+		const float offset = 5.0;
+		return (pos.x * pos.x) / (a * a) + (pos.y * pos.y) / (b * b) - pos.z - offset;
 	};
 
 	auto chairFunc = [](const glm::vec3& pos) {
-		// x^3 + y^3 = 0
-		return pos.x * pos.x * pos.x + pos.y * pos.y * pos.y;
+		// z * (x + y) = 0
+		return pos.z * (pos.x + pos.y);
 	};
 
-	auto conetearFunc = [](const glm::vec3& pos) {
-		// x^2 + y^2 + z^3 - z^2 = 0
-		return pos.x * pos.x + pos.y * pos.y + pos.z * pos.z * pos.z - pos.z * pos.z;
+	auto torusFunc = [](const glm::vec3& pos) {
+		// sqrt(x^2 + y^2) + z^3 - z^2 = 0
+		const float min_r = 3.0;
+		const float max_r = 4.5;
+		return pow((sqrt((pos.x * pos.x) + (pos.y * pos.y)) - max_r), 2) + pos.z * pos.z - min_r * min_r;
+		//return (4.0 * max_r * max_r) * ((pos.x * pos.x) + (pos.x * pos.x));
+	};
+
+	auto cylinderFunc = [](const glm::vec3& pos) {
+		// sqrt(x^2 + y^2) + z^3 - z^2 = 0
+		const float r2 = 4.5;
+		return (pos.x * pos.x + pos.y * pos.y - r2 * r2);
 	};
 
 	auto curveFunc = [](const glm::vec3& pos) {
-		// x^4 - y^2 - x^6 = 0
-		return pos.x * pos.x * pos.x * pos.x - pos.y * pos.y - pos.x * pos.x * pos.x * pos.x * pos.x * pos.x;
+		// x^3 - y^2 - z = 0
+		return pos.x * pos.x * pos.x - pos.y * pos.y - pos.z;
 	};
 
 	auto curve2Func = [](const glm::vec3& pos) {
@@ -108,7 +121,8 @@ int main() {
 	ExportScalarFieldCSV(min, max, step, "../Output/cone.txt", coneFunc);
 	ExportScalarFieldCSV(min, max, step, "../Output/parabola.txt", parabolaFunc);
 	ExportScalarFieldCSV(min, max, step, "../Output/chair.txt", chairFunc);
-	ExportScalarFieldCSV(min, max, step, "../Output/conetear.txt", conetearFunc);
+	ExportScalarFieldCSV(min, max, step, "../Output/torus.txt", torusFunc);
+	ExportScalarFieldCSV(min, max, step, "../Output/cylinder.txt", cylinderFunc);
 	ExportScalarFieldCSV(min, max, step, "../Output/curve.txt", curveFunc);
 	ExportScalarFieldCSV(min, max, step, "../Output/curve2.txt", curve2Func);
 
