@@ -74,11 +74,12 @@ void init()
 
 	// Load a dataset
 	//scalarField = ReadFile("../Output/sphere.txt");
-	scalarField = ReadFile("../Output/saddle.txt");
+	//scalarField = ReadFile("../Output/saddle.txt");
 	//scalarField = ReadFile("../Output/cone.txt");
 	//scalarField = ReadFile("../Output/parabola.txt");
 	//scalarField = ReadFile("../Output/chair.txt");
-	//scalarField = ReadFile("../Output/conetear.txt");
+	scalarField = ReadFile("../Output/torus.txt");
+	//scalarField = ReadFile("../Output/cylinder.txt");
 	//scalarField = ReadFile("../Output/curve.txt");
 	//scalarField = ReadFile("../Output/curve2.txt");
 }
