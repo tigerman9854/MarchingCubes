@@ -36,7 +36,7 @@ void ExportScalarFieldCSV(const glm::vec3& minPosition, const glm::vec3& maxPosi
 
 	// Loop through all 3 dimensions with <step> distance between each point
 	for (float x = minPosition.x; x <= maxPosition.x; x += step.x) {
-		for (float y = minPosition.y; y <= maxPosition.x; y += step.y) {
+		for (float y = minPosition.y; y <= maxPosition.y; y += step.y) {
 			for (float z = minPosition.z; z <= maxPosition.z; z += step.z) {
 
 				// Evaluate the function at this point
@@ -95,7 +95,7 @@ int main() {
 		// sqrt(x^2 + y^2) + z^3 - z^2 = 0
 		const float min_r = 3.0;
 		const float max_r = 4.5;
-		return pow((sqrt((pos.x * pos.x) + (pos.y * pos.y)) - max_r), 2) + pos.z * pos.z - min_r * min_r;
+		return powf((sqrt((pos.x * pos.x) + (pos.y * pos.y)) - max_r), 2) + pos.z * pos.z - min_r * min_r;
 		//return (4.0 * max_r * max_r) * ((pos.x * pos.x) + (pos.x * pos.x));
 	};
 
